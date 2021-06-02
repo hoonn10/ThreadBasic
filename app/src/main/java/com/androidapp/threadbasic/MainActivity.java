@@ -8,61 +8,65 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
     WorkerThread wt;
-    boolean running =true;
+    Thread wr;
+    boolean running = true;
+    String strTag = "THREAD";
 
-    String TAG = "THREAD";
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Log.v(strTag, "Now I am in onCreate");
+    }
 
-    class WorkerThread extends Thread{
-        public void run(){
+    @Override
+    public void onStart() {
+        super.onStart();
+        wt = new WorkerThread();
+        wr = new Thread(new WorkerRunnable());
+        running = true;
+        wt.start();
+        wr.start();
+        Log.v(strTag, "Now I am in onStart");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        running = false;
+        Log.v(strTag, "Now I am in onStop");
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.v(strTag, "Now I am in onPause");
+    }
+
+
+
+
+    class WorkerThread extends Thread {
+        public void run() {
             int i = 0;
-            for(i = 0 ; i < 20 && running; i++){
+            for (i = 0; i < 20 && running; i++) {
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e){
+                } catch (InterruptedException e) {
                 }
-                Log.v(TAG, "Thread time" + i);
+                Log.v(strTag, "Thread time=" + i);
             }
         }
     }
-
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Log.v(TAG, "Now I am in onCreate");
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        wt = new WorkerThread();
-        running=true;
-        wt.start();
-        Log.v(TAG, "Now I am in onStart");
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        running=false;
-        Log.v(TAG, "Now I am in onStop");
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG, "Now I am in onPause");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "Now I am in onResume");
-
+    class WorkerRunnable implements Runnable{
+        public void run() {
+            int i = 0;
+            for (i = 0; i < 20 && running; i++) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+                Log.v("THREAD", "Runnable time=" + i);
+            }
+        }
     }
 }
