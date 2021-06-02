@@ -8,42 +8,39 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
     WorkerThread wt;
-    Thread wr;
+    WorkerRunnable wr;
     boolean running = true;
-    String strTag = "THREAD";
+    String TAG = "THREAD";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.v(strTag, "Now I am in onCreate");
+        Log.v(TAG, "Now I am in onCreate");
     }
 
     @Override
     public void onStart() {
         super.onStart();
         wt = new WorkerThread();
-        wr = new Thread(new WorkerRunnable());
+        wr = new WorkerRunnable();
         running = true;
         wt.start();
         wr.start();
-        Log.v(strTag, "Now I am in onStart");
+        Log.v(TAG, "Now I am in onStart");
     }
 
     @Override
     public void onStop() {
         super.onStop();
         running = false;
-        Log.v(strTag, "Now I am in onStop");
+        Log.v(TAG, "Now I am in onStop");
     }
     @Override
     public void onPause() {
         super.onPause();
-        Log.v(strTag, "Now I am in onPause");
+        Log.v(TAG, "Now I am in onPause");
     }
-
-
-
 
     class WorkerThread extends Thread {
         public void run() {
@@ -53,11 +50,12 @@ public class MainActivity extends AppCompatActivity {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                 }
-                Log.v(strTag, "Thread time=" + i);
+                Log.v(TAG, "Thread time=" + i);
             }
         }
     }
-    class WorkerRunnable implements Runnable{
+
+    class WorkerRunnable extends Thread{
         public void run() {
             int i = 0;
             for (i = 0; i < 20 && running; i++) {
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                 }
-                Log.v("THREAD", "Runnable time=" + i);
+                Log.v(TAG, "Runnable time=" + i);
             }
         }
     }
